@@ -1,0 +1,18 @@
+{
+  "name": "Wikipedia Article Title Translator",
+  "manifest_version": 3,
+  "version": "0.1.0",
+  "description": "Displays translations of an article title in other languages.",
+  "permissions": ["tabs"],
+  "host_permissions": ["https://*.wikipedia.org/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://*.wikipedia.org/*"],
+      "js": ["contentScript.js"]
+    }
+  ],
+  "action": {
+    "default_title": "Wikipedia Article Title Translator",
+    "default_popup": "popup.html"
+  }
+}
