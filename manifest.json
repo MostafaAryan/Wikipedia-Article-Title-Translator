@@ -3,12 +3,21 @@
   "manifest_version": 3,
   "version": "0.1.0",
   "description": "Displays translations of an article title in other languages.",
-  "permissions": ["tabs"],
-  "host_permissions": ["https://*.wikipedia.org/*"],
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://*.wikipedia.org/*"
+  ],
   "content_scripts": [
     {
-      "matches": ["https://*.wikipedia.org/*"],
-      "js": ["contentScript.js"]
+      "matches": [
+        "https://*.wikipedia.org/*"
+      ],
+      "js": [
+        "contentScript.js"
+      ]
     }
   ],
   "action": {

@@ -4,7 +4,16 @@
   //todo remove
     console.log('contentScript is running :)');
 
-    const liFa = document.querySelector('a[lang="fa"]');
+    /* @todo make this variable universal. */
+    const storageKey = "selectedItem"
+
+    chrome.storage.local.get(storageKey, function (result) {
+    // result is an object like: result = {'selectedItem':'someValue'}
+    const selectedItem = result[storageKey]
+    
+    console.log(`selected language is: ${selectedItem}`);
+
+    const liFa = document.querySelector(`a[lang="${selectedItem}"]`);
     if(liFa) {
         const title = liFa.title
         console.log(title);
@@ -12,6 +21,9 @@
 
         appendToHeading(title, liFa.href);
     }
+});
+    
+    
     
 })();
 
