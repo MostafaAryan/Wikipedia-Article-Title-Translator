@@ -39,8 +39,20 @@ radios.forEach(radio => {
         });
         // Select the clicked radio
         radio.checked = true;
+
+        sendLanguageSelectedEvent(radio.value);
     });
 });
+
+function sendLanguageSelectedEvent(selectedLanguage) {
+    (async () => {
+        const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
+        // @todo change 'language' to variable.
+        const response = await chrome.tabs.sendMessage(tab.id, {language: `${selectedLanguage}`});
+        // do something with response here, not outside the function
+        console.log(response);
+      })();
+}
 
 
 

@@ -2,42 +2,62 @@
 (() => {
 
   //todo remove
-    console.log('contentScript is running :)');
+  console.log('contentScript is running :)');
 
-    /* @todo make this variable universal. */
-    const storageKey = "selectedItem"
+  /* @todo make this variable universal. */
+  const storageKey = "selectedItem"
 
-    chrome.storage.local.get(storageKey, function (result) {
+  chrome.storage.local.get(storageKey, function (result) {
     // result is an object like: result = {'selectedItem':'someValue'}
     const selectedItem = result[storageKey]
-    
+
     console.log(`selected language is: ${selectedItem}`);
 
-    const liFa = document.querySelector(`a[lang="${selectedItem}"]`);
-    if(liFa) {
-        const title = liFa.title
-        console.log(title);
-        console.log(liFa.href);
+    updateViewWithSelectedLanguage(selectedItem);
 
-        appendToHeading(title, liFa.href);
+  });
+
+  chrome.runtime.onMessage.addListener(
+    function (request, sender, sendResponse) {
+      console.log(sender.tab ?
+        "from a content script:" + sender.tab.url :
+        "from the extension");
+
+
+      console.log('selectedLanguage:' + request.language);
+      updateViewWithSelectedLanguage(request.language);
     }
-});
-    
-    
-    
+  );
+
 })();
+
+function updateViewWithSelectedLanguage(selectedLanguage) {
+  const liFa = document.querySelector(`a[lang="${selectedLanguage}"]`);
+  if (liFa) {
+    const title = liFa.title
+    console.log(title);
+    console.log(liFa.href);
+
+    appendToHeading(title, liFa.href);
+  }
+}
 
 function appendToHeading(str, link) {
   const heading = document.getElementById('firstHeading');
 
-  const br = document.createElement("br");
-  heading.appendChild(br);
+  let span = document.querySelector('#secondLanguageTitle');
+  if (!span) {
+    const br = document.createElement("br");
+    heading.appendChild(br);
 
-  const span = document.createElement("a"); 
+    span = document.createElement("a");
+    span.id = "secondLanguageTitle";
+    span.style.fontSize = "15px";
+    heading.appendChild(span);
+  }
+
   span.textContent = str;
-  span.href = link
-  span.style.fontSize = "15px";
-  heading.appendChild(span);
+  span.href = link;
 
   return heading.textContent;
 }
@@ -47,13 +67,12 @@ function appendToHeading(str, link) {
  * @returns {HTMLElement|null} The <h1> element, or null if not found.
  */
 function findFirstHeading() {
-    const firstHeading = document.querySelector('#firstHeading h1');
-    if (firstHeading) {
-      return firstHeading;
-    } else {
-      return 'No heading found.';
-    }
+  const firstHeading = document.querySelector('#firstHeading h1');
+  if (firstHeading) {
+    return firstHeading;
+  } else {
+    return 'No heading found.';
   }
+}
 
-  
-  
+
